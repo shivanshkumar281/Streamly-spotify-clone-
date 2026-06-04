@@ -31,6 +31,63 @@ spotify/
 > The admin dashboard is part of the frontend app and is reachable at the
 > `/admin` route — no separate server or port.
 
+
+## 📖 How to use
+
+### 🏠 Home
+The landing page. Use the **All / Music / Podcasts** chips at the top to switch what's shown:
+- **All** — Featured Charts (albums), Today's biggest hits (songs), and Podcasts.
+- **Music** — songs only.
+- **Podcasts** — opens the Browse Podcasts page.
+
+Click any song or album cover to start playing or to open its page.
+
+### ▶️ Player bar (bottom)
+Controls the currently playing track:
+- **Play / Pause**, **Next**, **Previous**
+- **Shuffle** and **Repeat** (highlighted when active; repeat loops the current track)
+- **Seek bar** — click anywhere on it or **drag the handle** to scrub; shows elapsed / total time
+- **Volume slider**
+- **Picture-in-Picture** — pops a mini player into a floating window (Chrome/Edge)
+- **Fullscreen** toggle
+
+Songs auto-advance to the next track when they finish.
+
+### 🔍 Search (left sidebar → Search)
+Type to search your library. The **All / Music / Podcasts** chips scope the results:
+- **All** — songs, albums, and podcasts
+- **Music** — songs
+- **Podcasts** — podcasts only
+
+### 📀 Album page
+Opens when you click an album. Shows the cover, total song count, and combined runtime, followed by the track list (#, Title, Album, Date Added, duration). Click a track to play it. The background gradient is derived from the album's colour.
+
+### 🎙️ Browse Podcasts (left sidebar → Browse Podcasts)
+A search bar plus a **Popular Podcasts** grid of every podcast in the database. Each tile shows the cover, name, description, and duration. Click a tile to play.
+
+### 👤 Account (sign up / log in)
+- Use **Sign up** / **Log in** (top-right) to create or access an account.
+- Once logged in, your avatar appears top-right. Open its menu to **Change profile picture**, **Change account name**, **Change password**, or **Log out**.
+- Sessions persist across refreshes.
+
+### 🧩 Playlists (left sidebar → Your Library)
+- **Create a playlist** with the **+** button or "Create Playlist" (requires being logged in — otherwise a prompt asks you to log in).
+- **Click** a playlist to open its page: a header with cover + name, the list of added songs (#, Title, Album, Date Added, duration, and a **⋯** menu to remove a song), and a search box ("Let's find something for your playlist") to find and **Add** songs from the database.
+- **Right-click** a playlist in the sidebar for options: **Edit details** (change cover photo, name, and optional description), **Make private / public**, or **Delete**.
+- The playlist page background gradient is derived from the first song's cover art.
+
+### 🛠️ Admin dashboard (`/admin`)
+The admin area is **password-protected** — opening `/admin` shows an "Enter Password" screen, and the panel only loads on the correct password. Leaving the admin page (or refreshing) logs you out automatically. Inside, you can:
+- **Add Song** — upload an audio file + cover image, set name, description, and album; duration is computed automatically.
+- **List Songs** — view all songs and delete any.
+- **Add Album** — upload a cover image, set name, description, and a background colour.
+- **List Albums** — view all albums and delete any.
+- **Add Podcast** — upload a podcast audio file + cover image, set name and description.
+- **List Podcasts** — view all podcasts and delete any.
+
+Uploaded media is stored on Cloudinary and immediately appears across the app.
+
+
 ## 🧰 Tech stack
 
 | Layer        | Technology                                            |
@@ -89,9 +146,7 @@ npm run dev            # starts on http://localhost:5173
 | -------------- | ------------------------------------------ |
 | `VITE_API_URL` | Base URL of the backend API (no trailing slash) |
 
-## ☁️ Deployment
 
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for full step-by-step instructions.
 
 **Quick version:**
 
@@ -109,6 +164,4 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for full step-by-step instructions.
 | POST   | `/api/album/add`   | Add an album (multipart) |
 | POST   | `/api/album/remove`| Remove an album by `id`|
 
-## 📝 License
 
-MIT — free to use for learning and portfolio purposes.
