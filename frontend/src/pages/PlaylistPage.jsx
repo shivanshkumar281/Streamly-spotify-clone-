@@ -25,7 +25,7 @@ const PlaylistPage = () => {
   } = useContext(PlayerContext);
 
   const [query, setQuery] = useState("");
-  const [openMenu, setOpenMenu] = useState(null); // songId whose row menu is open
+  const [openMenu, setOpenMenu] = useState(null);
 
   const playlist = playlists.find((pl) => String(pl.id) === id);
   const firstSongImage = playlist?.songs?.[0]?.image;
@@ -37,7 +37,7 @@ const PlaylistPage = () => {
     return () => window.removeEventListener("click", close);
   }, [openMenu]);
 
-  // Derive a gradient background from the first song's cover image.
+  // Gradient from first cover
   useEffect(() => {
     if (!firstSongImage) {
       setDisplayBg("#121212");

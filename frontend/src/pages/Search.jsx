@@ -34,7 +34,6 @@ const Search = () => {
             s.desc?.toLowerCase().includes(q)
         )
       : [];
-  // Albums only show under the "All" filter.
   const filteredAlbums =
     q && musicFilter === "all"
       ? albumsData.filter(
@@ -43,7 +42,6 @@ const Search = () => {
             a.desc?.toLowerCase().includes(q)
         )
       : [];
-  // Podcasts appear under both "All" and "Podcasts".
   const filteredPodcasts =
     q && (isPodcasts || musicFilter === "all")
       ? podcastsData.filter(

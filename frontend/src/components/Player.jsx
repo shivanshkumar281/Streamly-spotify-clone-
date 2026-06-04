@@ -39,7 +39,7 @@ const Player = () => {
     seekFromClientX(e.clientX);
   };
 
-  // Drag handling: track pointer movement anywhere on screen while dragging.
+  // Seek bar drag
   useEffect(() => {
     if (!dragging) return;
     const move = (e) => seekFromClientX(e.clientX);
@@ -66,7 +66,6 @@ const Player = () => {
       toast.info("Picture-in-Picture isn't supported in this browser.");
       return;
     }
-    // Already open → close it.
     if (pipWindow) {
       pipWindow.close();
       return;
@@ -75,7 +74,7 @@ const Player = () => {
       width: 460,
       height: 150,
     });
-    // Copy the page styles so the popped-out mini player keeps its appearance.
+    // Copy page styles into PiP window
     [...document.styleSheets].forEach((styleSheet) => {
       try {
         const cssRules = [...styleSheet.cssRules]
@@ -214,8 +213,7 @@ const Player = () => {
         />
       </div>
 
-      {/* Floating mini player rendered into the Picture-in-Picture window.
-          The main player bar above stays fully intact. */}
+      {/* PiP mini player */}
       {pipWindow &&
         createPortal(
           <div className="h-screen w-screen bg-black text-white flex items-center gap-4 px-4">

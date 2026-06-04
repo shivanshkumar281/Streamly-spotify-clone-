@@ -6,13 +6,10 @@ import { ADMIN_PASSWORD } from "../config";
 
 const AdminLayout = () => {
   const navigate = useNavigate();
-  // Unlock state lives only while the admin section is mounted, so leaving the
-  // admin page (or refreshing) automatically logs you out.
   const [unlocked, setUnlocked] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  // Clear any stale unlock flag from older sessions on mount.
   useEffect(() => {
     sessionStorage.removeItem("adminUnlocked");
   }, []);

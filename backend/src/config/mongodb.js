@@ -13,7 +13,7 @@ const connectDB = async () => {
   });
 
   try {
-    await mongoose.connect(`${process.env.MONGODB_URI}/spotify`);
+    await mongoose.connect(process.env.MONGODB_URI, { dbName: "spotify" });
   } catch (error) {
     console.error("MongoDB connection error:", error.message);
   }

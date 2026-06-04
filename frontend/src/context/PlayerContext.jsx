@@ -1,6 +1,7 @@
-import { createContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../config";
+import { AuthContext } from "./AuthContext";
 import {
   songsData as localSongs,
   albumsData as localAlbums,
@@ -8,7 +9,7 @@ import {
 
 export const PlayerContext = createContext();
 
-// Normalize the bundled (offline) data so it matches the API response shape.
+// Offline fallback data
 const fallbackAlbums = localAlbums.map((a) => ({
   _id: String(a.id),
   name: a.name,
@@ -24,7 +25,6 @@ const fallbackSongs = localSongs.map((s) => ({
   image: s.image,
   file: s.file,
   duration: s.duration,
-  // Spread the bundled songs across the bundled albums so album pages have content.
   album: localAlbums[s.id % localAlbums.length].name,
 }));
 
@@ -32,6 +32,10 @@ const PlayerContextProvider = (props) => {
   const audioRef = useRef();
   const seekBg = useRef();
   const seekBar = useRef();
+
+  const { user } = useContext(AuthContext);
+  const userId = user?.id || null;
+  const prevUserId = useRef(userId);
 
   const [songsData, setSongsData] = useState([]);
   const [albumsData, setAlbumsData] = useState([]);
@@ -41,20 +45,12 @@ const PlayerContextProvider = (props) => {
   const [shuffle, setShuffle] = useState(false);
   const [loop, setLoop] = useState(false);
   const [volume, setVolume] = useState(1);
-  const [playlists, setPlaylists] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem("playlists")) || [];
-    } catch {
-      return [];
-    }
-  });
+  const [playlists, setPlaylists] = useState([]);
   const [time, setTime] = useState({
     currentTime: { second: 0, minute: 0 },
     totalTime: { second: 0, minute: 0 },
   });
-  // Background of the main display area (set per-page, e.g. album/playlist gradients).
   const [displayBg, setDisplayBg] = useState("#121212");
-  // Home content filter chip: 'all' shows albums + songs, 'music' shows songs only.
   const [musicFilter, setMusicFilter] = useState("all");
 
   const play = () => {
@@ -74,7 +70,6 @@ const PlayerContextProvider = (props) => {
     setPlayStatus(true);
   };
 
-  // Play any track-like object (used for podcasts, which aren't in songsData).
   const playTrack = (item) => {
     if (!item) return;
     setTrack(item);
@@ -118,7 +113,7 @@ const PlayerContextProvider = (props) => {
     if (audioRef.current) audioRef.current.volume = value;
   };
 
-  // Move the playhead to a fraction (0..1) of the track — used by click & drag.
+  // Seek to fraction (0..1)
   const seekToFraction = (fraction) => {
     if (!audioRef.current || !audioRef.current.duration) return;
     const clamped = Math.min(Math.max(fraction, 0), 1);
@@ -185,7 +180,6 @@ const PlayerContextProvider = (props) => {
     );
   };
 
-  // Audio element event handlers (wired on the <audio> tag in App).
   const handleTimeUpdate = () => {
     const audio = audioRef.current;
     if (!audio || !audio.duration) return;
@@ -255,7 +249,6 @@ const PlayerContextProvider = (props) => {
     }
   };
 
-  // Play automatically whenever the track changes while in a "playing" state.
   useEffect(() => {
     if (track && playStatus && audioRef.current) {
       audioRef.current.play().catch(() => {});
@@ -263,7 +256,6 @@ const PlayerContextProvider = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [track]);
 
-  // Keep the audio element volume in sync.
   useEffect(() => {
     if (audioRef.current) audioRef.current.volume = volume;
   }, [volume]);
@@ -274,10 +266,26 @@ const PlayerContextProvider = (props) => {
     getPodcastsData();
   }, []);
 
-  // Persist playlists so they survive refreshes.
+  // Load on user switch, persist on change (scoped per user)
   useEffect(() => {
-    localStorage.setItem("playlists", JSON.stringify(playlists));
-  }, [playlists]);
+    if (prevUserId.current !== userId) {
+      prevUserId.current = userId;
+      if (!userId) {
+        setPlaylists([]);
+        return;
+      }
+      try {
+        setPlaylists(
+          JSON.parse(localStorage.getItem(`playlists_${userId}`)) || []
+        );
+      } catch {
+        setPlaylists([]);
+      }
+      return;
+    }
+    if (!userId) return;
+    localStorage.setItem(`playlists_${userId}`, JSON.stringify(playlists));
+  }, [playlists, userId]);
 
   const contextValue = {
     audioRef,

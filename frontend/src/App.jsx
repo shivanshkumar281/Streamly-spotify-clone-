@@ -53,8 +53,7 @@ const App = () => {
           <Route path="list-podcast" element={<ListPodcast />} />
         </Route>
 
-        {/* Any unknown route (e.g. navigating back past app history) falls
-            back to the home page so the UI never renders blank. */}
+        {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 

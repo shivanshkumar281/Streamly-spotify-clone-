@@ -19,7 +19,6 @@ const DisplayHome = () => {
   useEffect(() => {
     setDisplayBg("#121212");
     getPodcastsData();
-    // Podcasts have their own page, so Home only handles "all"/"music".
     if (musicFilter === "podcasts") setMusicFilter("all");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

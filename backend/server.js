@@ -12,7 +12,7 @@ import podcastRouter from "./src/routes/podcastRoute.js";
 const app = express();
 const port = process.env.PORT || 4000;
 
-// Connect to external services (skips gracefully if not configured)
+// External services
 connectDB();
 connectCloudinary();
 
@@ -27,7 +27,7 @@ app.use("/api/user", userRouter);
 app.use("/api/podcast", podcastRouter);
 
 app.get("/", (req, res) => {
-  res.send("Spotify Clone API is running ✅");
+  res.send("Streamly API is running");
 });
 
 app.listen(port, () => {

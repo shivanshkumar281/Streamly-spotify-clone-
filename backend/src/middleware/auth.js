@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-// Reads the JWT from either a `token` header or an `Authorization: Bearer` header.
+// JWT auth
 const authUser = (req, res, next) => {
   const headerToken =
     req.headers.token ||

@@ -12,33 +12,30 @@ const Navbar = () => {
   const { musicFilter, setMusicFilter, getPodcastsData } =
     useContext(PlayerContext);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [accountModal, setAccountModal] = useState(null); // 'name' | 'password' | 'avatar' | null
+  const [accountModal, setAccountModal] = useState(null);
 
   const openModal = (mode) => {
     setMenuOpen(false);
     setAccountModal(mode);
   };
 
-  // Chips scope the current Search view; elsewhere All/Music go Home and
-  // Podcasts opens (or reloads) the Browse Podcasts page.
   const selectFilter = (filter) => {
     const onSearch = location.pathname.startsWith("/search");
     const onPodcasts = location.pathname.startsWith("/podcasts");
 
     setMusicFilter(filter);
 
-    if (onSearch) return; // stay on Search, just scope the results
+    if (onSearch) return;
 
     if (filter === "podcasts") {
       if (onPodcasts) {
-        getPodcastsData(); // reload the Browse Podcasts page content
+        getPodcastsData();
       } else {
         navigate("/podcasts");
       }
       return;
     }
 
-    // All / Music → Home
     navigate("/");
   };
 

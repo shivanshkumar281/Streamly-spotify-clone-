@@ -7,9 +7,9 @@ export const AuthContext = createContext();
 const AuthContextProvider = (props) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState("");
-  const [authPrompt, setAuthPrompt] = useState(null); // { title, message } | null
+  const [authPrompt, setAuthPrompt] = useState(null);
 
-  // Restore session from localStorage on first load.
+  // Restore session
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
     const savedUser = localStorage.getItem("user");
@@ -134,7 +134,6 @@ const AuthContextProvider = (props) => {
     }
   };
 
-  // Show the blue Spotify-style prompt when a logged-out user tries a gated action.
   const showAuthPrompt = (title, message) => {
     setAuthPrompt({ title, message });
   };

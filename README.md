@@ -9,12 +9,14 @@ Streamly is a full-stack music-streaming web app with a player, playlists, podca
 ## ✨ Features
 
 - 🎵 **Full music player** — play / pause, next / previous, shuffle, repeat, auto-advance, draggable seek bar, and a working volume slider
-- 🔍 **Search** — filter songs and albums live
-- 📀 **Albums & songs** — browse featured charts and open album pages with track listings
-- 🎨 **Dynamic theming** — album pages pick up each album's background colour
-- 🧩 **Playlists** — create playlists from the library
+- 🔍 **Search** — filter songs, albums, and podcasts live (scoped by category)
+- 📀 **Albums & songs** — browse featured charts and open album pages with track listings and total runtime
+- 🎙️ **Podcasts** — a dedicated Browse Podcasts page with audio podcasts
+- 🧩 **Playlists** — create, edit (cover/name/description), make private/public, delete, and add/remove songs
+- 🎨 **Dynamic theming** — album & playlist pages derive their gradient from the cover art
+- 👤 **Authentication** — sign up / log in (JWT) plus an account menu to change name, password, and profile picture
 - 🖼️ **Picture-in-Picture & Fullscreen** — pop the player out or go fullscreen
-- 🛠️ **Built-in admin panel** — manage songs & albums at `/admin` (no separate app/port)
+- 🛠️ **Password-protected admin panel** — manage songs, albums & podcasts at `/admin` (no separate app/port)
 - ☁️ **Cloud storage** — media stored on Cloudinary, metadata in MongoDB
 - 🔌 **Graceful fallback** — the player uses bundled demo data when no API is configured
 - 📱 **Responsive UI** — styled with Tailwind CSS
@@ -139,29 +141,38 @@ npm run dev            # starts on http://localhost:5173
 | `CLOUDINARY_NAME`      | Cloudinary cloud name                |
 | `CLOUDINARY_API_KEY`   | Cloudinary API key                   |
 | `CLOUDINARY_SECRET_KEY`| Cloudinary API secret                |
+| `JWT_SECRET`           | Secret used to sign login tokens     |
 
 **frontend/.env**
 
-| Variable       | Description                                |
-| -------------- | ------------------------------------------ |
-| `VITE_API_URL` | Base URL of the backend API (no trailing slash) |
+| Variable              | Description                                        |
+| --------------------- | -------------------------------------------------- |
+| `VITE_API_URL`        | Base URL of the backend API (no trailing slash)    |
+| `VITE_ADMIN_PASSWORD` | Password for the `/admin` gate (set your own value) |
 
 
-
-**Quick version:**
+## ☁️ Deployment
 
 - **Frontend (player + admin) → Vercel.** Import the repo once with root directory `frontend`. Set `VITE_API_URL` to your backend URL. The admin panel ships at `/admin`.
 - **Backend → Render / Railway.** A long-running Express server with file uploads is best hosted on Render or Railway (Vercel's serverless functions don't suit Multer disk uploads). Set the MongoDB + Cloudinary env vars.
 
 ## 📡 API reference
 
-| Method | Endpoint           | Description            |
-| ------ | ------------------ | ---------------------- |
-| GET    | `/api/song/list`   | List all songs         |
-| POST   | `/api/song/add`    | Add a song (multipart) |
-| POST   | `/api/song/remove` | Remove a song by `id`  |
-| GET    | `/api/album/list`  | List all albums        |
-| POST   | `/api/album/add`   | Add an album (multipart) |
-| POST   | `/api/album/remove`| Remove an album by `id`|
+| Method | Endpoint                    | Description                         |
+| ------ | --------------------------- | ----------------------------------- |
+| GET    | `/api/song/list`            | List all songs                      |
+| POST   | `/api/song/add`             | Add a song (multipart)              |
+| POST   | `/api/song/remove`          | Remove a song by `id`               |
+| GET    | `/api/album/list`           | List all albums                     |
+| POST   | `/api/album/add`            | Add an album (multipart)            |
+| POST   | `/api/album/remove`         | Remove an album by `id`             |
+| GET    | `/api/podcast/list`         | List all podcasts                   |
+| POST   | `/api/podcast/add`          | Add a podcast (multipart)           |
+| POST   | `/api/podcast/remove`       | Remove a podcast by `id`            |
+| POST   | `/api/user/register`        | Register a new user (returns JWT)   |
+| POST   | `/api/user/login`           | Log in (returns JWT)                |
+| POST   | `/api/user/update-name`     | Update account name (auth)          |
+| POST   | `/api/user/update-password` | Change password (auth)              |
+| POST   | `/api/user/update-avatar`   | Update profile picture (auth, multipart) |
 
 
